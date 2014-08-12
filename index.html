@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Capitalist Pong</title>
+</head>
+<style type="text/css">
+body {
+margin-left: auto;
+margin-right: auto;
+background-color: #BBB;
+color:black;
+font: "Trebuchet MS";
+font-family: sans-serif;
+}
+
+#gamecanvas {
+/*border: 4px solid white;*/
+background-color: black;
+}
+
+h1 {
+text-align: center;
+}
+
+#gamediv {
+width:800px;
+height:600px;
+margin:auto;
+}
+
+#message, #message2 {
+visibility: hidden;
+}
+</style>
+<body>
+
+<div id="gamediv">
+<h1>Capitalist Pong</h1>
+<canvas id="gamecanvas" width="800" height="600">
+Your browser does not support the browser element.
+</canvas>
+<p id="message">See how long you need to play before you can win without doing anything.</p>
+<p id="message2">Welcome to America.</p>
+</div>
+
+<script type="text/javascript">
+function rand_ball_v() {
+a = Math.random()*10-5;
+if(a>0) a+= 5;
+if(a<=0) a-= 5;
+return a;
+}
+
+msg = document.getElementById("message");
+msg2 = document.getElementById("message2");
+
+canvas = document.getElementById("gamecanvas");
+ctx = canvas.getContext("2d");
+screen_height = canvas.height;
+screen_width = canvas.width;
+paddle_width = 10;
+computer = {x:paddle_width/2, y:screen_height/2, height:120,score:0, vy:0};
+player = {x:screen_width-paddle_width/2, y:screen_height/2, height:120,score:0, vy:0};
+ball = {width:20,height:20,x:screen_width/2,y:screen_height/2, vx:5, vy:rand_ball_v()};
+
+/*
+int num_pregame_iters = 2;
+for(i=0;i<num_pregame_iters;i++) {
+computer.height *= inc_ratio;
+computer.score++;
+player.height *= dec_ratio;
+player.score++;
+}
+*/
+
+function updateGame() {
+ctx.fillStyle = "#000";
+ctx.fillRect(0,0,screen_width,screen_height);
+
+inc_ratio = 1.1;
+dec_ratio = 0.9;
+
+score_font = "bold 36px Arial";
+
+ctx.fillStyle = "#FFF";
+ctx.fillRect(computer.x-paddle_width/2, computer.y-computer.height/2, paddle_width, computer.height);
+ctx.fillRect(player.x-paddle_width/2, player.y-player.height/2, paddle_width, player.height);
+ctx.fillRect(ball.x-ball.width/2, ball.y-ball.height/2, ball.width, ball.height);
+ctx.font = score_font;
+computer_text_width = ctx.measureText("$"+100*computer.score).width;
+ctx.fillText("$"+100*computer.score, 0.2*screen_width-computer_text_width/2, 0.1*screen_height);
+player_text_width = ctx.measureText("$"+100*player.score).width;
+ctx.fillText("$"+100*player.score, 0.8*screen_width-player_text_width/2, 0.1*screen_height);
+
+ball.x += ball.vx;
+ball.y += ball.vy;
+
+player.y += player.vy;
+
+//computer artificial intel starts here
+if(ball.y < computer.y - computer.height && Math.random()>0.05) {
+computer.y -= 8;
+}
+else if(ball.y > computer.y + computer.height && Math.random()>0.05) {
+computer.y += 8;
+}
+//ends here
+
+if(ball.y-ball.height/2<0 || ball.y+ball.height/2>screen_height) {
+ball.vy *= -1;
+if(ball.vx > 0) ball.vx += 3;
+if(ball.vx < 0) ball.vx -= 3;
+}
+
+if(ball.x+ball.width/2 > screen_width-paddle_width) {
+if(ball.y > player.y-player.height/2 && ball.y < player.y+player.height/2) {
+ball.vx *= -1;
+}
+}
+
+if(ball.x+ball.width/2 < 0) {
+player.score++;
+computer.height *= dec_ratio;
+player.height *= inc_ratio;
+ball.vy = rand_ball_v();
+ball.vx = Math.random()*10-5;
+ball.x = screen_width/2;
+ball.y = screen_height / 2;
+}
+
+if(ball.x-ball.width/2 < paddle_width) {
+if(ball.y > computer.y-computer.height/2 && ball.y < computer.y+computer.height/2) {
+ball.vx *= -1;
+}
+}
+
+if(ball.x-ball.width/2 > screen_width) {
+computer.score++;
+computer.height *= inc_ratio;
+player.height *= dec_ratio;
+ball.vy = rand_ball_v();
+ball.vx = Math.random()*10-5;
+ball.y = screen_height / 2;
+ball.x = screen_width/2;
+}
+
+if(player.score-computer.score >= 5) {
+msg.style.visibility = "visible";
+}
+if(player.score-computer.score >= 8) {
+msg2.style.visibility = "visible";
+}
+
+}
+
+document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 38) {
+        player.vy = -8;
+    }
+    else if(event.keyCode == 40) {
+        player.vy = 8;
+    }
+});
+
+document.addEventListener('keyup', function(event) {
+    if(event.keyCode == 38 || event.keyCode == 40) {
+        player.vy = 0;
+    }
+    else if(event.keyCode == 40) {
+        player.vy = 8;
+    }
+});
+
+timer = setInterval(updateGame, 1000/30);
+
+</script>
+</body>
+</html>
