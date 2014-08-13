@@ -61,8 +61,10 @@ screen_height = canvas.height;
 screen_width = canvas.width;
 paddle_width = 10;
 computer = {x:paddle_width/2, y:screen_height/2, height:120,score:0, vy:0};
-player = {x:screen_width-paddle_width/2, y:screen_height/2, height:120,score:0, vy:0};
+player = {x:screen_width-paddle_width/2, y:screen_height/2, height:120, score:0, vy:0};
 ball = {width:20,height:20,x:screen_width/2,y:screen_height/2, vx:5, vy:rand_ball_v()};
+
+restart_threshold = 20;
 
 /*
 int num_pregame_iters = 2;
@@ -105,22 +107,25 @@ computer.y -= 8;
 else if(ball.y > computer.y + computer.height) {
 computer.y += 8;
 }
+/*else if(Math.random() < Math.pow(1.01, -player.score)) {
+computer.y += 8;
+}*/
 //ends here
 
 if(ball.y-ball.height/2<0 || ball.y+ball.height/2>screen_height) {
 ball.vy *= -1;
 if(ball.vx > 0) ball.vx += 3;
-if(ball.vx < 0) ball.vx -= 3;
+else if(ball.vx <= 0) ball.vx -= 3;
 }
 
-if(ball.x+ball.width/2 > screen_width-paddle_width) {
+if(ball.x+ball.width/2 > screen_width-paddle_width && ball.x < screen_width) {
 if(ball.y > player.y-player.height/2 && ball.y < player.y+player.height/2) {
 ball.vx *= -1;
 ball.x = screen_width - paddle_width - ball.width - 1;
 }
 }
 
-if(ball.x+ball.width/2 < 0) {
+if(ball.x+ball.width/2 < -restart_threshold) {
 player.score++;
 computer.height *= dec_ratio;
 player.height *= inc_ratio;
@@ -130,14 +135,14 @@ ball.x = screen_width/2;
 ball.y = screen_height / 2;
 }
 
-if(ball.x-ball.width/2 < paddle_width) {
+if(ball.x-ball.width/2 < paddle_width && ball.x > 0) {
 if(ball.y > computer.y-computer.height/2 && ball.y < computer.y+computer.height/2) {
 ball.vx *= -1;
 ball.x = paddle_width + ball.width/2 + 1;
 }
 }
 
-if(ball.x-ball.width/2 > screen_width) {
+if(ball.x-ball.width/2 > screen_width + restart_threshold) {
 computer.score++;
 computer.height *= inc_ratio;
 player.height *= dec_ratio;
@@ -148,7 +153,7 @@ ball.x = screen_width/2;
 }
 
 if(player.score-computer.score >= 5) {
-msg.style.visibility = "visible";
+//msg.style.visibility = "visible";
 }
 if(player.score-computer.score >= 8) {
 //msg2.style.visibility = "visible";
