@@ -28,10 +28,6 @@ width:800px;
 height:600px;
 margin:auto;
 }
-
-#message, #message2 {
-visibility: hidden;
-}
 </style>
 <body>
 
@@ -40,8 +36,12 @@ visibility: hidden;
 <canvas id="gamecanvas" width="800" height="600">
 Your browser does not support the browser element.
 </canvas>
-<p id="message">See how long you need to play before you can win without doing anything.</p>
-<p id="message2">Welcome to America.</p>
+<!--<p>Select Difficulty: 
+<select>
+<option>Easy</option>
+<option>Medium</option>
+<option>Laissez Faire</option>
+</select></p>-->
 </div>
 
 <script type="text/javascript">
@@ -51,9 +51,6 @@ if(a>0) a+= 5;
 if(a<=0) a-= 5;
 return a;
 }
-
-msg = document.getElementById("message");
-msg2 = document.getElementById("message2");
 
 canvas = document.getElementById("gamecanvas");
 ctx = canvas.getContext("2d");
@@ -101,15 +98,12 @@ ball.y += ball.vy;
 player.y += player.vy;
 
 //computer artificial intel starts here
-if(ball.y < computer.y - computer.height) {
+if(ball.y < computer.y - computer.height/2 && Math.random()>0.05) {
 computer.y -= 8;
 }
-else if(ball.y > computer.y + computer.height) {
+else if(ball.y > computer.y + computer.height/2 && Math.random()>0.05) {
 computer.y += 8;
 }
-/*else if(Math.random() < Math.pow(1.01, -player.score)) {
-computer.y += 8;
-}*/
 //ends here
 
 if(ball.y-ball.height/2<0 || ball.y+ball.height/2>screen_height) {
@@ -150,13 +144,6 @@ ball.vy = rand_ball_v();
 ball.vx = Math.random()*10-5;
 ball.y = screen_height / 2;
 ball.x = screen_width/2;
-}
-
-if(player.score-computer.score >= 5) {
-//msg.style.visibility = "visible";
-}
-if(player.score-computer.score >= 8) {
-//msg2.style.visibility = "visible";
 }
 
 }
