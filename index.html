@@ -29,6 +29,7 @@ height:600px;
 margin:auto;
 }
 </style>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53ece6947e00affd"></script>
 <body>
 
 <div id="gamediv">
@@ -42,6 +43,12 @@ Your browser does not support the browser element.
 <option>Medium</option>
 <option>Laissez Faire</option>
 </select></p>-->
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_sharing_toolbox"></div>
+<footer>
+&copy; 2014 John Lhota.
+</footer>
 </div>
 
 <script type="text/javascript">
@@ -96,6 +103,10 @@ ball.x += ball.vx;
 ball.y += ball.vy;
 
 player.y += player.vy;
+
+/*if((computer.y + computer.height/2 <= screen_height && computer.vy > 0) || (computer.y-computer.height/2 >= 0 && computer.vy <0) && ball.vx < 0) {
+computer.y += computer.vy;
+}*/
 
 //computer artificial intel starts here
 if(ball.y < computer.y - computer.height/2 && Math.random()>0.05) {
