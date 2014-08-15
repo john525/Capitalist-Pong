@@ -109,10 +109,10 @@ computer.y += computer.vy;
 }*/
 
 //computer artificial intel starts here
-if(ball.y < computer.y - computer.height/2 && Math.random()>0.05) {
+if(ball.y < computer.y - computer.height/2) {
 computer.y -= 8;
 }
-else if(ball.y > computer.y + computer.height/2 && Math.random()>0.05) {
+else if(ball.y > computer.y + computer.height/2) {
 computer.y += 8;
 }
 //ends here
