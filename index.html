@@ -125,8 +125,9 @@ if(ball.vx > 0) ball.vx += 3;
 else if(ball.vx <= 0) ball.vx -= 3;
 }
 
-if(ball.x+ball.width/2 > screen_width-paddle_width && ball.x < screen_width) {
-if(ball.y > player.y-player.height/2 && ball.y < player.y+player.height/2) {
+if(ball.x+ball.width/2 >= screen_width-paddle_width && ball.x < screen_width) {
+if((ball.y+ball.height/2 > player.y-player.height/2 && ball.y-ball.height/2 < player.y+player.height/2)
+|| (ball.y > player.y-player.height/2 && ball.y < player.y+player.height/2)) {
 ball.vx *= -1;
 ball.x = screen_width - paddle_width - ball.width - 1;
 }
@@ -143,7 +144,8 @@ ball.y = screen_height / 2;
 }
 
 if(ball.x-ball.width/2 < paddle_width && ball.x > 0) {
-if(ball.y > computer.y-computer.height/2 && ball.y < computer.y+computer.height/2) {
+if((ball.y+ball.height/2 > computer.y-computer.height/2 && ball.y-ball.height/2 < computer.y+computer.height/2)
+|| (ball.y > computer.y-computer.height/2 && ball.y < computer.y+computer.height/2)) {
 ball.vx *= -1;
 ball.x = paddle_width + ball.width/2 + 1;
 }
