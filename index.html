@@ -66,6 +66,8 @@ ball = {width:20,height:20,x:screen_width/2,y:screen_height/2, vx:5, vy:rand_bal
 
 restart_threshold = 20;
 
+PAUSED = false;
+
 /*
 int num_pregame_iters = 2;
 for(i=0;i<num_pregame_iters;i++) {
@@ -84,6 +86,7 @@ inc_ratio = 1.1;
 dec_ratio = 0.9;
 
 score_font = "bold 36px Arial";
+paused_font = "bold 26px Arial";
 
 ctx.fillStyle = "#FFF";
 ctx.fillRect(computer.x-paddle_width/2, computer.y-computer.height/2, paddle_width, computer.height);
@@ -94,6 +97,15 @@ computer_text_width = ctx.measureText("$"+100*computer.score).width;
 ctx.fillText("$"+100*computer.score, 0.2*screen_width-computer_text_width/2, 0.1*screen_height);
 player_text_width = ctx.measureText("$"+100*player.score).width;
 ctx.fillText("$"+100*player.score, 0.8*screen_width-player_text_width/2, 0.1*screen_height);
+
+if(PAUSED) {
+	ctx.fillStyle = "rgba(255,255,255,0.7)";
+	ctx.font = paused_font;
+	paused_width = ctx.measureText("GAME PAUSED").width;
+	//paused_height = ctx.measureText("GAME PAUSED").height;
+	ctx.fillText("GAME PAUSED", screen_width/2-paused_width/2, screen_height/2-50);
+	return;
+}
 
 ball.x += ball.vx;
 ball.y += ball.vy;
@@ -107,9 +119,9 @@ computer.y -= 8;
 else if(ball.y > computer.y + computer.height) {
 computer.y += 8;
 }
-/*else if(Math.random() < Math.pow(1.01, -player.score)) {
-computer.y += 8;
-}*/
+//else if(Math.random() < Math.pow(1.01, -player.score)) {
+//computer.y += 8;
+//}
 //ends here
 
 if(ball.y-ball.height/2<0 || ball.y+ball.height/2>screen_height) {
@@ -167,6 +179,9 @@ document.addEventListener('keydown', function(event) {
     }
     else if(event.keyCode == 40) {
         player.vy = 8;
+    }
+    if(event.keyCode == 32) {
+    	PAUSED = !PAUSED;
     }
 });
 
